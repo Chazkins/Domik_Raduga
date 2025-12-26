@@ -7,6 +7,30 @@ $users = [
     'admin'   => ['password' => 'admin123',   'role' => 'admin']
 ];
 
+// Функция для валидации телефона
+function validatePhone($phone) {
+    // Удаляем все пробелы для проверки
+    $cleanPhone = preg_replace('/\s+/', '', $phone);
+    
+    // Проверяем на запретные символы (только цифры, +, -, скобки, точка разрешены)
+    if (!preg_match('/^[0-9+\-\(\)\.]+$/', $cleanPhone)) {
+        return false;
+    }
+    
+    // Дополнительная проверка: номер должен содержать минимум 10 цифр
+    $digitsOnly = preg_replace('/[^\d]/', '', $cleanPhone);
+    if (strlen($digitsOnly) < 10) {
+        return false;
+    }
+    
+    // Проверяем, что номер не состоит только из одних повторяющихся символов
+    if (preg_match('/^(\+)\1+$|^(-)\1+$|^(\.)\1+$/', $cleanPhone)) {
+        return false;
+    }
+    
+    return true;
+}
+
 // Обработка выхода
 if (isset($_GET['logout'])) {
     session_destroy();
@@ -126,6 +150,8 @@ if ($role === 'admin' && isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         .close-modal { position: absolute; right: 1.5rem; top: 1rem; font-size: 1.8rem; cursor: pointer; }
         .modal-body { padding: 2rem; }
         .confirm-delete { background: #e74c3c; color: white; padding: 1rem; border-radius: 12px; text-align: center; margin-bottom: 1rem; }
+        .error-message { background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; text-align: center; }
+        .success-message { background: #d4edda; color: #155724; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
@@ -180,36 +206,88 @@ if ($role === 'admin' && isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         </section>
 
         <section id="enroll">
-            <!-- Форма записи остаётся прежней -->
+            <!-- Форма записи с улучшенной валидацией телефона -->
             <div class="form-wrapper">
                 <div class="form-text">
                     <h2>Запись на кружок</h2>
                     <p>Оставьте заявку — мы свяжемся с вами</p>
                 </div>
                 <div class="form-container">
-                    <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['child_name'])): ?>
-                        <?php
+                    <?php 
+                    // Обработка формы записи
+                    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['child_name'])): 
                         $phone = $_POST['phone'] ?? '';
-                        if (!preg_match("/^[0-9+\-\s()]+$/", $phone)) {
-                            echo '<div style="background:#f8d7da;color:#721c24;padding:1rem;border-radius:12px;margin-bottom:1rem;">Ошибка телефона!</div>';
+                        
+                        // Валидация телефона с помощью нашей функции
+                        if (!validatePhone($phone)) {
+                            echo '<div class="error-message">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <div>
+                                        <strong>Ошибка в номере телефона!</strong><br>
+                                        Допустимые символы: цифры 0-9, плюс (+), дефис (-), скобки (), точка (.)<br>
+                                        Номер должен содержать минимум 10 цифр
+                                    </div>
+                                  </div>';
                         } else {
-                            echo '<div class="success-message"><i class="fas fa-check-circle"></i><div><strong>Заявка принята!</strong><br>Ждём '.htmlspecialchars($_POST['child_name']).'</div></div>';
+                            echo '<div class="success-message">
+                                    <i class="fas fa-check-circle"></i>
+                                    <div>
+                                        <strong>Заявка принята!</strong><br>
+                                        Ждём '.htmlspecialchars($_POST['child_name']).' на занятия.<br>
+                                        Мы свяжемся с вами по номеру '.htmlspecialchars($phone).'
+                                    </div>
+                                  </div>';
                         }
-                        ?>
-                    <?php endif; ?>
+                    endif; 
+                    ?>
+                    
                     <form method="POST" action="#enroll">
-                        <div class="form-group"><label>ФИО ребёнка</label><div class="input-icon-wrap"><i class="fas fa-child"></i><input type="text" name="child_name" required></div></div>
-                        <div class="form-group"><label>Возраст</label><div class="input-icon-wrap"><i class="fas fa-birthday-cake"></i><input type="number" name="age" min="5" max="18" required></div></div>
-                        <div class="form-group"><label>Кружок</label><div class="input-icon-wrap"><i class="fas fa-shapes"></i>
-                            <select name="program" required>
-                                <option value="">— Выберите —</option>
-                                <?php foreach ($programs as $prog): ?>
-                                    <option><?= htmlspecialchars($prog['title']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div></div>
-                        <div class="form-group"><label>ФИО родителя</label><div class="input-icon-wrap"><i class="fas fa-user"></i><input type="text" name="parent_name" required></div></div>
-                        <div class="form-group"><label>Телефон</label><div class="input-icon-wrap"><i class="fas fa-mobile-alt"></i><input type="tel" name="phone" required></div></div>
+                        <div class="form-group">
+                            <label>ФИО ребёнка</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-child"></i>
+                                <input type="text" name="child_name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Возраст</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-birthday-cake"></i>
+                                <input type="number" name="age" min="5" max="18" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Кружок</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-shapes"></i>
+                                <select name="program" required>
+                                    <option value="">— Выберите —</option>
+                                    <?php foreach ($programs as $prog): ?>
+                                        <option><?= htmlspecialchars($prog['title']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>ФИО родителя</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-user"></i>
+                                <input type="text" name="parent_name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Телефон</label>
+                            <div class="input-icon-wrap">
+                                <i class="fas fa-mobile-alt"></i>
+                                <input type="tel" name="phone" 
+                                       pattern="^[0-9+\-\(\)\.\s]+$"
+                                       title="Допустимые символы: цифры 0-9, +, -, (), . и пробелы. Минимум 10 цифр."
+                                       required>
+                            </div>
+                            <small style="display: block; margin-top: 5px; color: #666;">
+                                Примеры: +7 (999) 123-45-67, 8-999-123-45-67, 89991234567
+                            </small>
+                        </div>
                         <button type="submit" class="btn btn-primary">Отправить заявку</button>
                     </form>
                 </div>
@@ -390,7 +468,6 @@ if ($role === 'admin' && isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         }
     };
 </script>
-
 
 </body>
 </html>
