@@ -1,0 +1,540 @@
+/* style.css */
+:root {
+    --primary-color: #6C5CE7; /* Мягкий фиолетовый */
+    --accent-pink: #FD79A8;
+    --accent-yellow: #FDCB6E;
+    --accent-blue: #0984E3;
+    --accent-green: #00B894;
+    --bg-color: #F0F3F7;
+    --text-dark: #2D3436;
+    --text-light: #636E72;
+    --white: #ffffff;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --radius: 20px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif; /* Округлый шрифт */
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, hsla(253,16%,7%,0) 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,0) 0, hsla(225,39%,30%,0) 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,0) 0, hsla(339,49%,30%,0) 50%);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    color: white;
+    padding-top: 4rem;
+    padding-bottom: 6rem;
+    text-align: center;
+    position: relative;
+    border-radius: 0 0 50% 50% / 20px;
+    overflow: hidden;
+}
+
+header .logo-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: var(--bg-color);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    transform: scaleX(1.5);
+}
+
+/* BUTTONS */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-white {
+    background: white;
+    color: var(--primary-color);
+}
+
+.btn-white:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-pink));
+    color: white;
+    width: 100%;
+    font-size: 1.1rem;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* LAYOUT */
+.container {
+    max-width: 1100px;
+    margin: -3rem auto 2rem; /* Наезд на хедер */
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 10;
+}
+
+section {
+    margin-bottom: 5rem;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+/* CARDS */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Немного расширили мин. ширину */
+    gap: 2.5rem; /* Увеличили отступы между карточками */
+}
+
+.card {
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden; /* Важно, чтобы картинка не вылезала за скругленные углы */
+    box-shadow: var(--shadow);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(0,0,0,0.03);
+    animation: fadeIn 0.8s ease backwards;
+    display: flex;
+    flex-direction: column; /* Гарантирует, что карточка растет вертикально */
+}
+
+.card:hover {
+    transform: translateY(-12px) scale(1.02); /* Карточка теперь немного увеличивается */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Тень становится глубже */
+}
+
+/* Обновленный стиль для блока с изображением */
+.card-img {
+    height: 240px; /* ЗНАЧИТЕЛЬНО увеличили высоту фото (было 180px) */
+    width: 100%;
+    background-size: cover;
+    background-position: center center;
+    position: relative;
+    /* Мы убрали постоянное затемнение (::after), чтобы фото были яркими */
+}
+
+/* Добавляем легкий эффект "свечения" или блика при наведении на фото */
+.card-img::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.card:hover .card-img::before {
+    opacity: 1;
+}
+
+
+/* Умная раскраска иконок (остается прежней) */
+.card:nth-child(4n+1) .category-icon { background: var(--accent-pink); box-shadow: 0 4px 15px var(--accent-pink); }
+.card:nth-child(4n+2) .category-icon { background: var(--accent-yellow); color: #333; box-shadow: 0 4px 15px var(--accent-yellow); }
+.card:nth-child(4n+3) .category-icon { background: var(--accent-blue); box-shadow: 0 4px 15px var(--accent-blue); }
+.card:nth-child(4n+4) .category-icon { background: var(--accent-green); box-shadow: 0 4px 15px var(--accent-green); }
+
+.category-icon {
+    position: absolute;
+    bottom: -25px; /* Чуть ниже, так как иконка стала больше */
+    right: 25px;
+    width: 60px; /* Увеличили размер иконки */
+    height: 60px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem; /* Увеличили шрифт иконки */
+    border: 4px solid white; /* Добавили белую обводку, чтобы отделить от фото */
+    z-index: 2;
+    transition: transform 0.4s;
+}
+
+/* Иконка слегка подпрыгивает при наведении на карточку */
+.card:hover .category-icon {
+    transform: rotate(-10deg) scale(1.1);
+}
+
+.card-body {
+    padding: 2.5rem 1.8rem 1.8rem; /* Увеличили верхний отступ из-за большой иконки */
+    flex-grow: 1; /* Занимает все оставшееся место */
+    display: flex;
+    flex-direction: column;
+}
+
+.card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: var(--text-dark);
+    font-weight: 800;
+}
+
+.age-badge {
+    align-self: flex-start; /* Прижимаем бейдж влево */
+    background: #f1f2f6;
+    color: var(--text-light);
+    padding: 0.4rem 1rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    flex-grow: 1; /* Растягивает текст, чтобы кнопка всегда была внизу */
+}
+
+.btn-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto; /* Прижимает кнопку к низу карточки */
+}
+
+.btn-link:hover {
+    gap: 15px; /* Стрелочка отъезжает дальше при наведении */
+    color: var(--accent-pink);
+}
+
+/* FORM SECTION */
+.form-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    align-items: center;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.form-text {
+    background: var(--primary-color);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 3rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-text h2 {
+    color: white;
+    text-align: left;
+}
+
+.contact-info {
+    margin-top: 2rem;
+}
+
+.contact-info p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-container {
+    padding: 3rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.input-icon-wrap {
+    position: relative;
+}
+
+.input-icon-wrap i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b2bec3;
+    transition: color 0.3s;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.8rem; /* Отступ слева под иконку */
+    border: 2px solid #e1e5ea;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s;
+    background: #fdfdfd;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+}
+
+input:focus + i, .input-icon-wrap:focus-within i {
+    color: var(--primary-color);
+}
+
+.success-message {
+    background: #e6fffa;
+    color: #2d3436;
+    padding: 1rem;
+    border-radius: 12px;
+    border-left: 5px solid #00b894;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.success-message i {
+    font-size: 1.5rem;
+    color: #00b894;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: white;
+    margin-top: 3rem;
+    border-top: 1px solid #eee;
+}
+
+.socials {
+    margin-top: 1rem;
+}
+
+.socials a {
+    color: var(--text-light);
+    font-size: 1.5rem;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.socials a:hover {
+    color: var(--primary-color);
+}
+
+/* ANIMATIONS */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    header h1 { font-size: 2rem; }
+    .form-wrapper { grid-template-columns: 1fr; }
+    .form-text { padding: 2rem; text-align: center; }
+    .form-text h2 { text-align: center; }
+    .contact-info { display: flex; flex-direction: column; align-items: center; }
+    .container { margin-top: -2rem; }
+}
+
+/* Панель переключения ролей */
+.role-switcher {
+    background: #2d3436;
+    padding: 12px 0;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.role-switcher a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 20px;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    opacity: 0.8;
+}
+
+.role-switcher a.active,
+.role-switcher a:hover {
+    background: var(--primary-color);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Скрытие секций по ролям */
+.section-parent,
+.section-teacher,
+.section-admin {
+    display: none;
+}
+
+/* Цвет хедера в зависимости от роли */
+.role-header-parent { 
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%) !important; 
+}
+.role-header-teacher { 
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%) !important; 
+}
+.role-header-admin { 
+    background: linear-gradient(135deg, #636e72 0%, #2d3436 100%) !important; 
+}
+
+/* Стили для педагога */
+.group-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.attendance-table th,
+.attendance-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.attendance-table th {
+    background: #f1f2f6;
+}
+
+.attendance-table input[type="checkbox"] {
+    transform: scale(1.3);
+}
+
+/* Стили для админа */
+.admin-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+.btn-edit { background: #f39c12; }
+.btn-delete { background: #e74c3c; }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.stat-card h3 {
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    margin: 0.5rem 0;
+}
